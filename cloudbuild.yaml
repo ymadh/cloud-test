@@ -5,7 +5,7 @@ steps:
   - name: node
     entrypoint: npm
     args: ["test"]
-    env: "ci"
+    env: ["ci"]
   - name: node
     entrypoint: npm
     args: ["run", "build"]
