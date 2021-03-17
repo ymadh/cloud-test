@@ -1,6 +1,6 @@
 # Use the official lightweight Node.js 12 image.
 # https://hub.docker.com/_/node
-FROM node:12-slim as base
+FROM node:12-slim
 
 # Create and change to the app directory.
 WORKDIR /usr/src/app
@@ -10,12 +10,13 @@ WORKDIR /usr/src/app
 # Copying this separately prevents re-running npm install on every code change.
 COPY package*.json ./
 
-FROM base as test
-RUN npm ci
-COPY . .
-CMD [ "npm", "run", "test" ]
+RUN npm test
 
-FROM base as prod
-RUN npm ci --production
-COPY . .
-CMD [ "node", "server.js" ]
+# Install production dependencies.
+RUN npm install --only=production
+
+# Copy local code to the container image.
+COPY . ./
+
+# Run the web service on container startup.
+CMD [ "npm", "start" ]
