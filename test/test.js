@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = 'ci';
 
 var expect = require('chai').expect;
 let chaiHttp = require('chai-http');
