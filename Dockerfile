@@ -10,10 +10,12 @@ WORKDIR /usr/src/app
 # Copying this separately prevents re-running npm install on every code change.
 COPY package*.json ./
 
-RUN npm test
 
 # Install production dependencies.
-RUN npm install --only=production
+RUN npm install
+# --only=production
+
+RUN npm test
 
 # Copy local code to the container image.
 COPY . ./
