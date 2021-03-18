@@ -9,5 +9,5 @@ steps:
       - "CI=true"
   # Build
   - name: "gcr.io/cloud-builders/npm"
-    args: ["start"]
+    args: ["app", "deploy", "--ignore-file=cloudbuild.yaml"]
 # Deploy
