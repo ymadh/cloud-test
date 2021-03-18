@@ -4,10 +4,10 @@ steps:
     args: ["install"]
   # Test
   - name: "gcr.io/cloud-builders/npm"
-    args: ["run", "test"]
+    args: ["test"]
     env:
       - "CI=true"
   # Build
   - name: "gcr.io/cloud-builders/npm"
-    args: ["run", "build"]
+    args: ["start"]
 # Deploy
