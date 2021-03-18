@@ -12,7 +12,7 @@ describe('/GET homepage', () => {
         chai.request(server)
             .get('/')
             .end((err, res) => {
-                chai.expect(res.text).equal('Well hello #3')
+                chai.expect(res.text).equal('Well hello #4')
                 done();
             });
     });
