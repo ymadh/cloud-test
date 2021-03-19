@@ -1,13 +1,31 @@
 steps:
-  # Install
-  - name: "gcr.io/cloud-builders/npm"
-    args: ["install"]
-  # Test
-  - name: "gcr.io/cloud-builders/npm"
-    args: ["test"]
+  # build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/cloud-computing-302919/sample-proj:${SHORT_SHA}",
+        ".",
+      ]
+    # push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/sample-proj"]
+    # deploy container image to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "hello-cloud-run",
+        "--image",
+        "gcr.io/$PROJECT_ID/sample-proj:${SHORT_SHA}",
+        "--region",
+        "us-east1",
+        "--allow-unauthenticated",
+      ]
     env:
-      - "CI=true"
-  # Build
-  - name: "gcr.io/cloud-builders/npm"
-    args: ["app", "deploy", "--ignore-file=cloudbuild.yaml"]
-# Deploy
+      - "PORT=8080"
+images:
+  - gcr.io/$PROJECT_ID/sample-proj
