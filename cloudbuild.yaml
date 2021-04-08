@@ -1,13 +1,9 @@
+# https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values
+#https://cloud.google.com/solutions/cicd-pipeline-for-data-processing
 steps:
   # build the container image
   - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "build",
-        "-t",
-        "gcr.io/cloud-computing-302919/sample-proj:${SHORT_SHA}",
-        ".",
-      ]
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/sample-proj", "."]
     # push the container image to Container Registry
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/$PROJECT_ID/sample-proj"]
@@ -18,9 +14,9 @@ steps:
         "beta",
         "run",
         "deploy",
-        "hello-cloud-run",
+        "sample-proj",
         "--image",
-        "gcr.io/$PROJECT_ID/sample-proj:${SHORT_SHA}",
+        "gcr.io/$PROJECT_ID/sample-proj",
         "--region",
         "us-east1",
         "--allow-unauthenticated",
@@ -29,3 +25,4 @@ steps:
       - "PORT=8080"
 images:
   - gcr.io/$PROJECT_ID/sample-proj
+/he
