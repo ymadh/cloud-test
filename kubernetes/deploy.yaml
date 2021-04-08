@@ -1,0 +1,225 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sample-proj
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:labels":
+            .: {}
+            "f:app": {}
+        "f:spec":
+          "f:progressDeadlineSeconds": {}
+          "f:replicas": {}
+          "f:revisionHistoryLimit": {}
+          "f:selector":
+            "f:matchLabels":
+              .: {}
+              "f:app": {}
+          "f:strategy":
+            "f:rollingUpdate":
+              .: {}
+              "f:maxSurge": {}
+              "f:maxUnavailable": {}
+            "f:type": {}
+          "f:template":
+            "f:metadata":
+              "f:labels":
+                .: {}
+                "f:app": {}
+            "f:spec":
+              "f:containers":
+                'k:{"name":"sample-project-github-sha256-1"}':
+                  .: {}
+                  "f:image": {}
+                  "f:imagePullPolicy": {}
+                  "f:name": {}
+                  "f:resources": {}
+                  "f:terminationMessagePath": {}
+                  "f:terminationMessagePolicy": {}
+              "f:dnsPolicy": {}
+              "f:restartPolicy": {}
+              "f:schedulerName": {}
+              "f:securityContext": {}
+              "f:terminationGracePeriodSeconds": {}
+      manager: GoogleCloudConsole
+      operation: Update
+      time: "2021-04-08T14:53:30Z"
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:annotations":
+            .: {}
+            "f:deployment.kubernetes.io/revision": {}
+        "f:status":
+          "f:availableReplicas": {}
+          "f:conditions":
+            .: {}
+            'k:{"type":"Available"}':
+              .: {}
+              "f:lastTransitionTime": {}
+              "f:lastUpdateTime": {}
+              "f:message": {}
+              "f:reason": {}
+              "f:status": {}
+              "f:type": {}
+            'k:{"type":"Progressing"}':
+              .: {}
+              "f:lastTransitionTime": {}
+              "f:lastUpdateTime": {}
+              "f:message": {}
+              "f:reason": {}
+              "f:status": {}
+              "f:type": {}
+          "f:observedGeneration": {}
+          "f:readyReplicas": {}
+          "f:replicas": {}
+          "f:updatedReplicas": {}
+      manager: kube-controller-manager
+      operation: Update
+      time: "2021-04-08T14:53:32Z"
+  name: sample-proj
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-proj
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sample-proj
+    spec:
+      containers:
+        - image: gcr.io/cloud-computing-302919/github.com/ymadh/cloud-test
+          imagePullPolicy: IfNotPresent
+          name: sample-project-github-sha256-1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: sample-proj
+  managedFields:
+    - apiVersion: autoscaling/v2beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:labels":
+            .: {}
+            "f:app": {}
+        "f:spec":
+          "f:maxReplicas": {}
+          "f:metrics": {}
+          "f:minReplicas": {}
+          "f:scaleTargetRef":
+            "f:apiVersion": {}
+            "f:kind": {}
+            "f:name": {}
+      manager: GoogleCloudConsole
+      operation: Update
+      time: "2021-04-08T14:53:30Z"
+    - apiVersion: autoscaling/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:annotations":
+            .: {}
+            "f:autoscaling.alpha.kubernetes.io/conditions": {}
+        "f:status":
+          "f:currentReplicas": {}
+      manager: vpa-recommender
+      operation: Update
+      time: "2021-04-08T14:53:46Z"
+  name: sample-proj-hpa-1ijt
+  namespace: default
+spec:
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sample-proj
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    app: sample-proj
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:labels":
+            .: {}
+            "f:app": {}
+        "f:spec":
+          "f:externalTrafficPolicy": {}
+          "f:ports":
+            .: {}
+            'k:{"port":8080,"protocol":"TCP"}':
+              .: {}
+              "f:port": {}
+              "f:protocol": {}
+              "f:targetPort": {}
+          "f:selector":
+            .: {}
+            "f:app": {}
+          "f:sessionAffinity": {}
+      manager: kubectl-expose
+      operation: Update
+      time: "2021-04-08T14:58:19Z"
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:spec":
+          "f:type": {}
+      manager: kubectl-edit
+      operation: Update
+      time: "2021-04-08T14:59:27Z"
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:finalizers":
+            .: {}
+            'v:"service.kubernetes.io/load-balancer-cleanup"': {}
+        "f:status":
+          "f:loadBalancer":
+            "f:ingress": {}
+      manager: kube-controller-manager
+      operation: Update
+      time: "2021-04-08T14:59:59Z"
+  name: sample-proj
+  namespace: default
+spec:
+  clusterIP: 10.40.13.92
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 32719
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: sample-proj
+  sessionAffinity: None
+  type: LoadBalancer
