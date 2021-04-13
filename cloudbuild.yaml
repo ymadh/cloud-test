@@ -25,4 +25,3 @@ steps:
       - "PORT=8080"
 images:
   - gcr.io/$PROJECT_ID/sample-proj
-/he
